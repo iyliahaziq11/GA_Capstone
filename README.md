@@ -1,75 +1,60 @@
-# Capstone Project
+# DSI25 Capstone Project
 
-Your Capstone project is the culmination of your time at GA. You will be tasked with developing an interesting question, collecting the data required to model that data, developing the strongest model (or models) for prediction, and communicating those findings to other data scientists and non-technical individuals. This introductory document lays out the five consitutent portions of the project and their due dates.
+# Background and Problem Statement
+Mixed Martial Arts (MMA) is currently one of the fastest, if not the fastest growing sport in the world. It's growth is hugely led by Ultimate Fighting Championship (UFC). Closer to home, we also have the One Championship that aims to emulate the success of the UFC. Either way, the sport is growing rapidly. However, it seems that usage of video for analysis is not as prevalent as in other sports such as tennis, football, American football, and such.
 
-Not sure where to start? Need some inspiration? Check out some past student capstone projects at the bottom of this README: [CLICK HERE](#example-projects)
+As such, this project aims to cover that gap, utilizing Computer Vision to analayse striking attempts by fighters. The result can then be used for a variety of use-case such as assistive CV tool for judges or even to analyse fighter's techniques. For this project, we will focus on the former.
 
-## Your Deliverables
+45% of fights in the UFC ends in Decision, which means both fighters last through 3 or 5 rounds, leaving the judges to decide on the eventual winner. It can be tricky for the judges to score the rounds especially when both fighters are equally matched up. There is bound to be some subjectivity involved. As such, this assistive CV tool can potentially bring some objectivity in the decision-making process.
 
-- A well-made predictive model using either structured or unstructured machine learning techniques (or other technique approved in advanced by the global instructors), as well as clean, well-written code.
-- A technical report aimed at fellow data scientists that explains your process and findings
-- A public presentation of your findings aimed at laypeople.
+---
+# Executive Summary
+Frames of different types of MMA strikes were collected from Youtube and edited using Davinci Resolve to mask the fighters such that only one person can be inside the frame. This is to allow for pose estimation to be applied, which will be discussed furrther later.
 
-### **Capstone, Part 1: Topic Proposals**
+OpenCV and Mediapipe were used together to extract pose estimation keypoint values for these frames. The angles were then computed from these keypoint values. The keypoint values themselves were excluded as it were deemed to bring too much 'noise' to the modelling. Also, by having 99 additional keypoint features, it may lead to overfitting.
 
-In Part 1, get started by choosing **three potential topics and problems**, describing your goals & criteria for success, potential audience(s), and identifying 1-2 potential datasets. In the field of data science, good projects are practical. Your capstone project should be manageable and affect a real world audience. This might be a domain you are familiar with, a particular interest you have, something that affects a community you are involved in, or an area that relates to a field you wish to work in.
+These angle values were converted into a dataframe and PyCaret was used to classify the different strikes.
+- right high kick
+- left high kick
+- right low kick
+- left low kick
+- right punch
+- left punch
 
-One of the best ways to test ideas quickly is to share them with others. A good data scientist has to be comfortable discussing ideas and presenting to audiences. That's why for Part 1 of your Capstone project, you'll be preparing a lightning talk in addition to your initial notebook outlining the scope of your project.  You will present your candidate topics in a slide deck, and should be prepared to answer questions and defend your data selection(s). Presentations should take no more than 3-5 minutes.
+PyCaret produced the following as the top 3 models:
+1. Extra Tree Classifiers
+2. Extreme Gradient Boosting
+3. Light Gradient Boosting
 
-**The ultimate choice of topic for your capstone project is yours!** However, this is research and development work. Sometimes projects that look easy can be difficult and vice versa. It never hurts to have a second (or third) option available.
+The decision was made to use the Extra Trees Classifier as the final model.
+The data set was train/test split by 0.7/0.3.
+With the train set, the model achieved accuracy of 0.95 and F1 of 0.95.
+With the test set, the model achieved accuracy of 0.93 and F1 of 0.93.
+This shows that the model is capable of correctly classifying the different types of strikes using angles alone.
 
-- **Goal**: Prepare a 3-5 minute lightning talk that covers three potential topics, including potential sources of data, goals, metrics and audience.
-- **Due**: See `course-info`
+---
 
-### **Capstone, Part 2: Problem Statement + Data**
+## Data Dictionary
 
-For Part 2, provide a clear statement of the problem that you have chosen and an overview of your approach to solving that problem. Summarize your objectives, goals & success metrics, and any risks & assumptions. Outline your proposed methods and models. **Your data should be in hand by this point in the process!**
 
-**Again, your data should be in hand by this point the process!**
+|        Variable Name                |    Data Type   |        Description         |
+|:-----------------------------------:|:--------------:|:--------------------------:|
+|         right_elbow_angle           |      float     |angle of right elbow        |
+|         right_shoulder_angle        |      float     |angle of right shoulder     |    
+|         right_hip_angle             |      float     |angle of right hip          |
+|         right_knee_angle            |      float     |angle of right knee         |
+|         right_ankle_angle           |      float     |angle of right ankle        |
+|         left_elbow_angle            |      float     |angle of left elbow         |
+|         left_shoulder_angle         |      float     |angle of left shoulder      |
+|         left_hip_angle              |      float     |angle of left hip           |
+|         left_knee_angle             |      float     |angle of left knee          |
+|         left_ankle_angle            |      float     |angle of left ankle         |
+|         attack_type                 |   categorical  |label of type of strike     |
 
-- **Goal**: Gather your data and describe your proposed approach to your local instructor.
-- **Due**: See `course-info`
 
-### **Capstone, Part 3: Progress Update + Preliminary Findings**
 
-In Part 3, you'll create a progress update of your work in order to get feedback along the way. Describe your approach, initial EDA, initial results, and any setbacks or lessons learned so far. Your update should include updated visual and statistical analysis of your data. You’ll also meet with your local instructional team to get feedback on your results so far!
+---
 
-- **Goal**: Discuss progress and setbacks, include visual and statistical analysis, review with teaching team.
-- **Due**: See `course-info`
+# Conclusion and Recommendation
 
-### **Capstone, Part 4: Progress Update + Technical Analysis**
-
-By now, you're ready to apply your modeling skills to make machine learning predictions. Your goal for Part 4 is to develop a technical document (in the form of Jupyter notebook) that can be shared among your peers.
-
-Document your research and analysis including a summary, an explanation of your modeling approach as well as the strengths and weaknesses of any variables in the process. You should provide insight into your analysis, using best practices like cross validation or applicable prediction metrics.
-
-- **Goal**: Detailed update and code with a summary of your statistical analysis, model, and evaluation metrics.
-- **Due**: See `course-info`
-
-### **Capstone, Part 5: Presentation + Recommendations**
-
-Whether during an interview or as part of a job, you will frequently have to present your findings to business partners and other interested parties - many of whom won't know anything about data science! That's why for Part 5, you'll create a presentation of your previous findings with a non-technical audience in mind.
-
-You should already have the analytical work complete, so now it's time to clean up and clarify your findings. Come up with a detailed slide deck or interactive demo that explains your data, visualizes your model, describes your approach, articulates strengths and weaknesses, and presents specific recommendations. Be prepared to explain and defend your model to an inquisitive audience!
-
-- **Goal**: Detailed presentation deck that relates your data, model, and findings to a non-technical audience.
-- **Due**: See `course-info`
-
-<a name="example-projects"></a>
-### Example Projects
-
-Below are some great capstone projects submitted by past DSI students!
-
-* [Kenya Chauche, DSI-10](https://github.com/KenyaChauche/sonnet-generation) built a natural language generation program trained on Shakespeare's sonnets
-* [Molly Baird, DSI-11](https://github.com/mollycbaird/ComputerVisionSET) wanted to computerize the game of SET, and succeeded admirably
-* [Daniel Johnston, DSI-2](https://github.com/djkjohnston/ML_from_scratch_GA_DSI_Capstone) built several key machine learning algos from scratch in python, comparing their performance to the scikit-learn implementations.  
-* [Alex Schultz, DSI-3](https://github.com/fullquartpress/DSI-Capstone) predicts spot coffee (commodity coffee bean) price changes from sentiment analysis of an industry trade publication.  
-* [Brice Walker, DSI-3](https://github.com/bricewalker/Hey-Jetson) wanted to play with his Jetson GPU and built voice transcription _from scratch_.  
-* [Caitlin Streamer, DSI-4](https://github.com/c-streams/Pneumonia) worked on a Kaggle dataset to predict pneumonia from chest X-rays.  
-* [Brian Osgood, DSI-04](https://github.com/osgoodbl/PyFilter) built a bot that crawls twitter and identifies whether an image tagged 'lamborghini' is actually a lamborghini.  
-* [Frank Turner, DSI-04](https://github.com/frankturnerv/Fashioning_Models_from_Fashion_Models) uses image recognition to identify the colors used in a fashion season's palette.  
-* [DSI-06, team](https://github.com/balak4/Optimizing-Evac-Routes) This is actually the DSI-6 group project. It's here because it's really, really impressive.  
-* [Amy Taylor, DSI-06](https://github.com/amytaylor330/CNN_for_Dance_Music_Classification_repost) wanted to quantify the difference between types of dance music.  
-* [Veronica Giannotta, DSI-06](https://github.com/vgiannotta/Emotional-Impacts-of-Viral-Content) delved into the dark side of the internet and evaluated the emotional sentiment of social media content that goes viral.
-* [Derek Steffan, DSI-07](https://github.com/dsteffan/twitch_chat_analysis) automates the process of creating twitch highlight reels using sentiment analysis, markov chains, and Bayesian analysis.  
-* [Sebastian Alvis, League of Legends](https://github.com/salvis2/SpringboardAlvis/tree/master/capstone_project_1) Not a GA capstone, but a very compelling case for applying data science to your interests to come up with a good capstone.
+In conclusion ,the model was able to successfully classify different types of strikes using Computer Vision and Pose Estimation, with very high accuracy and other metrics.
