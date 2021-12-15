@@ -18,6 +18,7 @@ Mixed Martial Arts (MMA) is currently one of the fastest, if not the fastest gro
 As such, this project aims to cover that gap; utilising Computer Vision to analyse strike attempts or aggressiveness by fighters. The result can then be used for a variety of use-case such as assistive CV tool for judges or even to analyse fighter's techniques. For this project, we will focus on the former.
 
 45% of fights in the UFC ends in Decision, which means both fighters last through 3 or 5 rounds, leaving the judges to decide on the eventual winner. It can be tricky for the judges to score the rounds especially when both fighters are equally matched. There is bound to be some subjectivity involved. As such, this assistive CV tool can potentially bring some objective aspect in the decision-making process.
+
 ![pie_chart](./asset/images/pie_chart.png)
 
 ---
@@ -64,6 +65,7 @@ The decision was made to use the Extra Trees Classifier as the final model.
 The data set was train/test split by 0.7/0.3.
 With the train set, the model achieved accuracy of 0.95 and F1 of 0.95.
 With the test set, the model achieved accuracy of 0.93 and F1 of 0.93.
+
 ![model_results](./asset/images/model_results.png)
 
 This shows that the model is capable of correctly classifying the different types of strikes using angles alone.
@@ -74,12 +76,15 @@ As shown by the confusion matrix below, the target labels are represented as suc
 - 3: left low kick
 - 4: right punch
 - 5: left punch
+
 ![confusion_matrix](./asset/images/confusion_matrix.png)
 
 The topmost features in predicting the type of strike were related to shoulders and hips as seen in the graph below. As such for future deployment of this tool, hips and shoulders should be visible as much as possible for the computer vision and pose estimation to pick up on.
+
 ![feature_importance](./asset/images/feature_importance.png)
 
 A potential deployment of this model can be seen below, the frames had to be masked out as the pose estimation cannot run on multiple person in the frame. While more improvement is necessary, this is a good starting point.
+
 ![model_output](./asset/images/model_output.png)
 
 ---
